@@ -2,11 +2,27 @@ package rocks.iulian.cnp;
 
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.List;
+//import java.util.Arrays;
+//import java.util.List;
 
-// TODO, CNPs starting with 9 (aka NIF), are for non-citizens.
-public class Cnp {
+/**
+ * The CNP has the following structure:
+ * SAALLZZJJNNNC
+ * S = sex digit, also encodes century of birth
+ * AA = year of birth, last two digits
+ * LL = month of birth, 01-12
+ * ZZ = day of birth, 01-31
+ * JJ = county where birth was registered,
+ *      or for people born before 1978, county where
+ *      the person resided when CNP was issued.
+ *      Typical values for this field are 01-39, 41-46, and,
+ *      starting with 1981, also 51 and 52.
+ *      but CNPs with other values exist as well.
+ * NNN = ordinal
+ *  TODO Unclear if the ordinal (NNN) can be 000 or starts at 001
+ * C = check digit.
+ */
+public class Cnp extends RomanianPersonalNumber {
 
     private Sex sex;
     private int birthYear;
@@ -29,10 +45,10 @@ public class Cnp {
             throw new IllegalArgumentException("Birth date is invalid");
         }
 
-        if(! isValidCounty(county)) {
-            throw new IllegalArgumentException("County is invalid");
-        }
-
+//        if(! isValidCounty(county)) {
+//            throw new IllegalArgumentException("County is invalid");
+//        }
+//
         if(ordinal < 0 || ordinal > 999) {
             throw new IllegalArgumentException("Ordinal is out of range");
         }
@@ -86,9 +102,10 @@ public class Cnp {
         }
     }
 
-    private static boolean isValidCounty(int county) {
-        return VALID_COUNTIES.contains(county);
-    }
+//    private static boolean isValidCounty(int county) {
+//        return VALID_COUNTIES.contains(county);
+//        TODO some CNPs were issued with nonstandard counties, especially to citizens born abroad
+//    }
 
     private static boolean isNumeric(String s) {
         try {
@@ -97,6 +114,10 @@ public class Cnp {
         } catch(NumberFormatException e) {
             return false;
         }
+    }
+
+    public static boolean isValid(String cnpStr) {
+        return fromString(cnpStr) != null;
     }
 
     public static Cnp fromString(String cnpStr) {
@@ -110,6 +131,11 @@ public class Cnp {
         if( !isNumeric(cnpStr) ){
             return null;
             //throw new CNPException( CNPException.V_FORMAT );
+        }
+
+        if( checkDigit(cnpStr.substring(0, 12)) != cnpStr.charAt(12) ) {
+            return null;
+            //throw new IllegalArgumentException("Check digit does not match");
         }
 
         char sexChar = cnpStr.charAt(0);
@@ -164,16 +190,14 @@ public class Cnp {
         }
 
         int county = Integer.parseInt(cnpStr.substring(7, 9));
-        if(! isValidCounty(county)) {
-            return null;
-        }
 
         int ordinal = Integer.parseInt(cnpStr.substring(9, 12));
 
         return new Cnp(sex, birthYear, birthMonth, birthDay, county, ordinal, bornAbroad);
     }
 
-    private String stringify12() {
+    @Override
+    protected String stringify12() {
         return String.format("%s%02d%02d%02d%02d%03d", sexChar(), birthYear % 100, birthMonth, birthDay, county, ordinal);
     }
 
@@ -204,35 +228,21 @@ public class Cnp {
         }
     }
 
-    public String stringify() {
-        String str12 = stringify12();
-        return str12 + checkDigit(str12);
-    }
 
     @Override
     public String toString() {
         return "CNP: " + stringify();
     }
 
-    private static final int CHECK_DIGIT_FACTORS[] = {2, 7, 9, 1, 4, 6, 3, 5, 8, 2, 7, 9};
     public static final int MIN_BIRTH_YEAR = 1800;
     public static final int MAX_BIRTH_YEAR = 2099;
-    public static final List<Integer> VALID_COUNTIES = Arrays.asList(new Integer[] {
-             1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
-            11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-            21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-            31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-            41, 42, 43, 44, 45, 46,
-            51, 52
-    });
+//    public static final List<Integer> VALID_COUNTIES = Arrays.asList(new Integer[] {
+//             1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
+//            11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+//            21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+//            31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+//            41, 42, 43, 44, 45, 46,
+//            51, 52
+//    });
 
-    private static char checkDigit(String cnp12) {
-        int v = 0;
-        for(int i = 0; i < 12; i++)
-            v += Character.digit(cnp12.charAt(i), 10) * CHECK_DIGIT_FACTORS[i];
-        v %= 11;
-        if( v == 10 )
-            v = 1;
-        return Character.forDigit(v, 10);
-    }
 }
