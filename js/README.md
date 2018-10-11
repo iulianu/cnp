@@ -13,7 +13,7 @@ CNP.isValid("9000123456785") // NIF
 
 
 // Destructuring of CNP
-let cnp = CNP.fromString("1690509049993")
+let cnp = CNP.cnpFromString("1690509049993")
 cnp.sex
 // => "m"
 cnp.birthYear
