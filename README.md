@@ -8,7 +8,4 @@ rezidente în România. NIF (număr de identificare fiscală) este codul similar
 pentru persoanele nonrezidente. Bibliotecile din acest repo permit generarea
 și validarea CNP-urilor și NIF-urilor.
 
-## TODO
-
-* JavaScript implementation
 

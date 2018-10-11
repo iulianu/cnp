@@ -1,0 +1,25 @@
+{
+  "name": "cnp",
+  "version": "0.1.0",
+  "description": "Romanian personal numbers CNP and NIF",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.6.1",
+    "jasmine": "latest"
+  },
+  "scripts": {
+    "test": "jasmine test.js"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "node": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module"
+    }
+  },
+  "author": "Iulian Dogariu <code@iuliandogariu.com>",
+  "license": "MIT"
+}

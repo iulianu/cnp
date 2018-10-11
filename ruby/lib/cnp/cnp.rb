@@ -3,6 +3,21 @@ require_relative 'is_valid'
 require_relative 'check_digit'
 
 module Cnp
+  # The CNP has the following structure:
+ 	# SAALLZZJJNNNC
+  # S = sex digit, also encodes century of birth
+  # AA = year of birth, last two digits
+  # LL = month of birth, 01-12
+  # ZZ = day of birth, 01-31
+  # JJ = county where birth was registered,
+  #      or for people born before 1978, county where
+  #      the person resided when CNP was issued.
+  #      Typical values for this field are 01-39, 41-46, and,
+  #      starting with 1981, also 51 and 52.
+  #      but CNPs with other values exist as well.
+  # NNN = ordinal
+  #  TODO Unclear if the ordinal (NNN) can be 000 or starts at 001
+  # C = check digit.
   class Cnp
     extend IsValid::ClassMethods
     include CheckDigit::InstanceMethods

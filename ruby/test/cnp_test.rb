@@ -35,6 +35,9 @@ class CnpTest < Test::Unit::TestCase
     assert_nil cnp
   end
 
+  # Typical values for the county field are 01-39, 41-46, and,
+  # starting with 1981, also 51 and 52.
+  # but CNPs with other values exist as well.
   def test_accept_cnp_nonstandard_county
     cnp = Cnp::Cnp.from_string("1690509990011")
     assert_equal :m, cnp.sex

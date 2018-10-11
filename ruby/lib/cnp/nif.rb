@@ -1,4 +1,8 @@
 module Cnp
+
+  # A NIF is kind of a CNP but without inner structure
+  # and with the leading digit '9'.
+  # The CNP check digit rules apply.
   class Nif
     extend IsValid::ClassMethods
     include CheckDigit::InstanceMethods

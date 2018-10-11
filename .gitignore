@@ -1,3 +1,5 @@
 java/target
 *.iml
 .idea
+js/node_modules
+js/package-lock.json
