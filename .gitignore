@@ -1,5 +1,6 @@
-java/target
+target
 *.iml
 .idea
 js/node_modules
 js/package-lock.json
+rust/Cargo.lock
