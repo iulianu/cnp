@@ -42,10 +42,10 @@ const checkDigit = function(str12) {
     sum += parseInt(str12.charAt(i), 10) * CHECK_DIGIT_FACTORS[i];
   }
   sum %= 11;
-  if(sum == 10) {
-    return 1;
+  if(sum === 10) {
+    return '1';
   } else {
-    return sum;
+    return sum.toString();
   }
 };
 
@@ -134,7 +134,7 @@ const cnpFromString = function(str) {
       return null;
     }
   }
-  if( checkDigit(str.substr(0, 12)) != str.charAt(12) ) {
+  if( checkDigit(str.substr(0, 12)) !== str.charAt(12) ) {
     return null;
   }
 
@@ -176,7 +176,7 @@ const cnpFromString = function(str) {
       return null;
   }
 
-  let bornAbroad = (str[0] == '7' || str[0] == '8');
+  let bornAbroad = (str[0] === '7' || str[0] === '8');
   let birthYear = centuryBase + parseInt(str.substr(1, 2), 10);
   let birthMonth = parseInt(str.substr(3, 2), 10);
   let birthDay = parseInt(str.substr(5, 2), 10);
@@ -193,10 +193,10 @@ const NIF = function(digits11) {
   this.digits11 = digits11;
   this.stringify12 = function() {
     return "9" + this.digits11;
-  }
+  };
   this.stringify = stringify.bind(this);
   return this;
-}
+};
 
 const nifFromString = function(str) {
   if( str.length !== 13 ) {
@@ -207,18 +207,18 @@ const nifFromString = function(str) {
       return null;
     }
   }
-  if( str.charAt(0) != '9' ) {
+  if( str.charAt(0) !== '9' ) {
     // Not a NIF
     return null;
   }
-  if( checkDigit(str.substr(0, 12)) != str.charAt(12) ) {
+  if( checkDigit(str.substr(0, 12)) !== str.charAt(12) ) {
     return null;
   }
   return new NIF(str.substr(1, 11));
 };
 
 const isValid = function(str) {
-  if(str.charAt(0) == '9') {
+  if(str.charAt(0) === '9') {
     return nifFromString(str) !== null;
   } else {
     return cnpFromString(str) !== null;
